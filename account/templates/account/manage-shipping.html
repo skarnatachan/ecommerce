@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Shipping{% endblock title %}
+{% block content %}
+    <section class="bg-gray-50 dark:bg-gray-900">
+        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+            <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                        Shipping Data
+                    </h1>
+                    <form class="space-y-4 md:space-y-6" method="post">
+                        {% csrf_token %}
+                        {# ── Non-field errors ── #}
+                        {% if form.non_field_errors %}
+                            <div class="p-3 rounded-lg bg-red-50 border border-red-300">
+                                {% for error in form.non_field_errors %}
+                                    <p class="text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {#  Full Name Field  #}
+                        <div>
+                            <label for="full_name"
+                                   class="block mb-2 text-base font-medium text-gray-900 dark:text-white">Full
+                                Name</label>
+                            {% if form.full_name.errors %}
+                                {% render_field form.full_name id="full_name" type="text" class="bg-gray-50 border border-red-500 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-700 dark:border-red-500 dark:placeholder-gray-400 dark:text-white" placeholder="Your full name" %}
+                            {% else %}
+                                {% render_field form.full_name id="full_name" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your full name" %}
+                            {% endif %}
+                            <p class="text-xs">{{ form.full_name.help_text }}</p>
+                            {% for error in form.full_name.errors %}
+                                <p class="mt-1 text-xs text-red-600">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {#  Email Field  #}
+                        <div>
+                            <label for="email"
+                                   class="block mb-2 text-base font-medium text-gray-900 dark:text-white">Email</label>
+                            {% if form.email.errors %}
+                                {% render_field form.email type="email" id="email" class="bg-gray-50 border border-red-500 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-700 dark:border-red-500 dark:placeholder-gray-400 dark:text-white" placeholder="Your email" %}
+                            {% else %}
+                                {% render_field form.email type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your email" %}
+                            {% endif %}
+                            <p class="text-xs">{{ form.email.help_text }}</p>
+                            {% for error in form.email.errors %}
+                                <p class="mt-1 text-xs text-red-600">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+
+                        {#  Address1 Field  #}
+                        <div>
+                            <label for="address1"
+                                   class="block mb-2 text-base font-medium text-gray-900 dark:text-white">Address
+                                1</label>
+                            {% if form.address1.errors %}
+                                {% render_field form.address1 type="text" id="address1" class="bg-gray-50 border border-red-500 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-700 dark:border-red-500 dark:placeholder-gray-400 dark:text-white" placeholder="Your address" %}
+                            {% else %}
+                                {% render_field form.address1 type="text" id="address1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your address" %}
+                            {% endif %}
+                            <p class="text-xs">{{ form.address1.help_text }}</p>
+                            {% for error in form.address1.errors %}
+                                <p class="mt-1 text-xs text-red-600">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+
+                        {#  Address2 Field  #}
+                        <div>
+                            <label for="address2"
+                                   class="block mb-2 text-base font-medium text-gray-900 dark:text-white">Address
+                                2</label>
+                            {% if form.address2.errors %}
+                                {% render_field form.address2 type="text" id="address2" class="bg-gray-50 border border-red-500 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-700 dark:border-red-500 dark:placeholder-gray-400 dark:text-white" placeholder="Your address" %}
+                            {% else %}
+                                {% render_field form.address2 type="text" id="address2" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your address" %}
+                            {% endif %}
+                            <p class="text-xs">{{ form.address2.help_text }}</p>
+                            {% for error in form.address2.errors %}
+                                <p class="mt-1 text-xs text-red-600">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+
+                        {#  City Field  #}
+                        <div>
+                            <label for="city"
+                                   class="block mb-2 text-base font-medium text-gray-900 dark:text-white">City
+                            </label>
+                            {% if form.city.errors %}
+                                {% render_field form.city type="text" id="city" class="bg-gray-50 border border-red-500 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-700 dark:border-red-500 dark:placeholder-gray-400 dark:text-white" placeholder="Your city" %}
+                            {% else %}
+                                {% render_field form.city type="text" id="city" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your city" %}
+                            {% endif %}
+                            <p class="text-xs">{{ form.city.help_text }}</p>
+                            {% for error in form.city.errors %}
+                                <p class="mt-1 text-xs text-red-600">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+
+                        {#  State Field  #}
+                        <div>
+                            <label for="state"
+                                   class="block mb-2 text-base font-medium text-gray-900 dark:text-white">State
+                            </label>
+                            {% if form.state.errors %}
+                                {% render_field form.state type="text" id="state" class="bg-gray-50 border border-red-500 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-700 dark:border-red-500 dark:placeholder-gray-400 dark:text-white" placeholder="Your state" %}
+                            {% else %}
+                                {% render_field form.state type="text" id="state" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your state" %}
+                            {% endif %}
+                            <p class="text-xs">{{ form.city.help_text }}</p>
+                            {% for error in form.city.errors %}
+                                <p class="mt-1 text-xs text-red-600">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+
+                        {#  Zip Code Field  #}
+                        <div>
+                            <label for="zip_code"
+                                   class="block mb-2 text-base font-medium text-gray-900 dark:text-white">Zip Code
+                            </label>
+                            {% if form.zip_code.errors %}
+                                {% render_field form.zip_code type="text" id="zip_code" class="bg-gray-50 border border-red-500 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-700 dark:border-red-500 dark:placeholder-gray-400 dark:text-white" placeholder="Your zip code" %}
+                            {% else %}
+                                {% render_field form.zip_code type="text" id="zip_code" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your zip code" %}
+                            {% endif %}
+                            <p class="text-xs">{{ form.zip_code.help_text }}</p>
+                            {% for error in form.zip_code.errors %}
+                                <p class="mt-1 text-xs text-red-600">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        <button type="submit"
+                                class="w-full cursor-pointer text-white bg-sky-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-lg px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                            Update Data
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

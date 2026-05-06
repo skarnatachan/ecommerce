@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load mathfilters %}
+{% block title %}Cart Summary{% endblock title %}
+{% block content %}
+    <section class="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
+        <div class="mx-auto max-w-7xl px-4 2xl:px-0">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">Shopping Cart</h2>
+            <div class="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
+                <div class="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
+                    <div class="space-y-6">
+                        {% for item in cart %}
+                            {% with product=item.product %}
+                                <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
+                                    <div class="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
+                                        <a href="#" class="shrink-0 md:order-1">
+                                            <img class="h-20 w-20 dark:hidden"
+                                                 src="{{ product.image.url }}"
+                                                 alt="{{ product.name }}"/>
+                                        </a>
+
+                                        <label for="counter-input" class="sr-only">Choose quantity:</label>
+                                        <div class="flex items-center justify-between md:order-3 md:justify-end">
+                                            <div class="flex items-center text-base">
+                                                <label for="">Qty : </label>
+                                                <select name="" id="select{{ product.id }}">
+                                                    <option selected>
+                                                        {{ item.qty }}
+                                                    </option>
+                                                    <option value="">1</option>
+                                                    <option value="">2</option>
+                                                    <option value="">3</option>
+                                                    <option value="">4</option>
+                                                    <option value="">5</option>
+                                                    <option value="">6</option>
+                                                    <option value="">7</option>
+                                                    <option value="">8</option>
+                                                    <option value="">9</option>
+                                                    <option value="">10</option>
+                                                </select>
+
+                                            </div>
+                                            <div class="text-end md:order-4 md:w-32">
+                                                <p class="text-xl font-bold text-gray-900 dark:text-white">
+                                                    ${{ product.price|mul:item.qty }}</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
+                                            <a href="{{ product.get_absolute_url }}"
+                                               class="text-2xl font-semibold text-gray-900 hover:underline dark:text-white">{{ product.name }}</a>
+
+                                            <div class="flex items-center gap-4 mt-3">
+                                                <button type="button" data-index="{{ product.id }}"
+                                                        class="update-button cursor-pointer rounded-lg px-4 py-2 bg-black text-white">
+                                                    Update
+                                                </button>
+
+                                                <button type="button" data-index="{{ product.id }}"
+                                                        class="delete-button cursor-pointer rounded-lg px-4 py-2 bg-red-600 text-white">
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endwith %}
+                        {% endfor %}
+                        <div class="flex justify-between">
+                            <a href="{% url 'payment:checkout' %}" class=" px-4 py-3 bg-green-700 rounded-lg text-xl text-white font-semibold">Proceed to checkout
+                                </a>
+                            <h1 id="sub-total" class="text-end text-2xl text-slate-600 font-semibold">Sub total :
+                                ${{ cart.get_total }}</h1>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        document.addEventListener('click', async function (e) {
+            const deleteButton = e.target.closest('.delete-button');
+            const updateButton = e.target.closest('.update-button');
+
+            if (!deleteButton && !updateButton) {
+                return;
+            }
+
+            e.preventDefault();
+
+            const clickedButton = deleteButton || updateButton;
+            const productId = clickedButton.dataset.index;
+            const isDeleteAction = Boolean(deleteButton);
+            const url = isDeleteAction
+                ? '{% url "cart:cart-delete" %}'
+                : '{% url "cart:cart-update" %}';
+
+            const formData = new FormData();
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+            formData.append('product_id', productId);
+            formData.append('action', 'post');
+
+            if (!isDeleteAction) {
+                const selectElement = document.getElementById('select' + productId);
+                const selectedOption = selectElement.options[selectElement.selectedIndex];
+                formData.append('product_quantity', selectedOption.text);
+            }
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData
+                });
+                const json = await response.json();
+                location.reload(true);
+                document.getElementById('cart-badge1').textContent = json.qty;
+                document.getElementById('sub-total').textContent = json.total;
+            } catch (error) {
+                console.error('Error processing cart action:', error);
+            }
+        });
+    </script>
+{% endblock content %}

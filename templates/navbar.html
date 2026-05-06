@@ -1,0 +1,339 @@
+<nav id="navbar" class="sticky top-0 left-0 right-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="flex items-center justify-between h-16 gap-3">
+
+            <!-- ── Brand ── -->
+            <a href="{% url 'store:store' %}" class="brand shrink-0 text-3xl font-bold text-green-800">🍓RipeReady 🍌</a>
+
+            <!-- ── Desktop Nav links ── -->
+            <div class="hidden md:flex items-center gap-1">
+
+                <!-- Category dropdown -->
+                <div class="dropdown" id="catdrop">
+                    <button class="nav-link text-base lg:text-lg" onclick="toggleDrop('catdrop')">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="7" height="7" rx="1"/>
+                            <rect x="14" y="3" width="7" height="7" rx="1"/>
+                            <rect x="3" y="14" width="7" height="7" rx="1"/>
+                            <rect x="14" y="14" width="7" height="7" rx="1"/>
+                        </svg>
+                        Category
+                        <svg class="w-3 h-3 transition-transform duration-200" id="catdrop-caret" fill="none"
+                             stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="drop-menu" id="cat-menu">
+                        <ul class="text-base lg:text-lg">
+                            <li class="drop-item"><a href="{% url 'store:store' %}">All Categories</a></li>
+                            {% for category in all_categories %}
+                                <li class="drop-item "><a
+                                        href="{{ category.get_absolute_url }}">{{ category.name|capfirst }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'account:dashboard' %}" class="nav-link">Dashboard</a>
+                    <a href="{% url 'account:user-logout' %}" class="nav-link">Logout</a>
+                {% else %}
+                    <a href="{% url 'account:register' %}" class="nav-link">Register</a>
+                    <a href="{% url 'account:my-login' %}" class="nav-link">Login</a>
+                {% endif %}
+
+
+                <!-- Cart -->
+                <a href="{% url 'cart:cart-summary' %}" class="nav-link relative">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 0 1-8 0"/>
+                    </svg>
+                    MyCart
+                    <span id="cart-badge1" class="text-black">
+                        {% with qty_amount=cart|length %}
+                            {% if qty_amount > 0 %}
+                                ({{ qty_amount }})
+                            {% else %}
+                                (0)
+                            {% endif %}
+                        {% endwith %}
+                    </span>
+                </a>
+
+                <!-- Theme toggle dropdown -->
+                <div class="dropdown" id="themedrop">
+                    <button class="nav-link px-2" onclick="toggleDrop('themedrop')" title="Theme">
+                    <span id="themeIcon">
+                      <!-- auto/system icon -->
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="4"/><path
+                              d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+                      </svg>
+                    </span>
+                    </button>
+                    <div class="drop-menu" id="theme-menu">
+                        <div class="drop-item theme-opt" data-t="light" onclick="setTheme('light')">
+                            <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="4"/>
+                                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+                            </svg>
+                            Light
+                        </div>
+                        <div class="drop-item theme-opt" data-t="dark" onclick="setTheme('dark')">
+                            <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                            </svg>
+                            Dark
+                        </div>
+                        <div class="drop-item theme-opt" data-t="system" onclick="setTheme('system')">
+                            <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <rect x="2" y="3" width="20" height="14" rx="2"/>
+                                <path d="M8 21h8M12 17v4"/>
+                            </svg>
+                            System
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- end desktop links -->
+
+            <!-- ── Mobile right cluster ── -->
+            <div class="flex md:hidden items-center gap-2">
+                <!-- Cart (mobile) -->
+                <a href="#" class="nav-link relative px-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 0 1-8 0"/>
+                    </svg>
+                    <span class="cart-badge absolute -top-1 -right-1">3</span>
+                </a>
+                <!-- Hamburger -->
+                <button id="hamburger" class="nav-link px-2" onclick="toggleMobile()">
+                    <div class="ham-wrap">
+                        <span class="ham-line"></span>
+                        <span class="ham-line"></span>
+                        <span class="ham-line"></span>
+                    </div>
+                </button>
+            </div>
+
+        </div><!-- /flex row -->
+    </div><!-- /max-w -->
+
+    <!-- ── Mobile Menu ── -->
+    <div id="mobile-menu">
+        <div class="max-w-7xl mx-auto px-4 py-3 space-y-1">
+
+            <!-- Category -->
+            <div>
+                <div class="mob-link" onclick="toggleMobSub('mob-cat')">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" rx="1"/>
+                        <rect x="14" y="3" width="7" height="7" rx="1"/>
+                        <rect x="3" y="14" width="7" height="7" rx="1"/>
+                        <rect x="14" y="14" width="7" height="7" rx="1"/>
+                    </svg>
+                    Category
+                    <svg class="w-3.5 h-3.5 ml-auto transition-transform duration-200" id="mob-cat-caret" fill="none"
+                         stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                </div>
+                <div class="mob-sub" id="mob-cat">
+                    <div class="drop-menu" id="cat-menu">
+                        <ul class="text-base">
+                            <li class="drop-item"><a href="{% url 'store:store' %}">All Categories</a></li>
+                            {% for category in all_categories %}
+                                <li class="drop-item "><a
+                                        href="{{ category.get_absolute_url }}">{{ category.name|capfirst }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#" class="mob-link">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 8v4l3 3"/>
+                </svg>
+                About
+            </a>
+            <a href="#" class="mob-link">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M22 16.92V21a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.37 20a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 3 5.18 2 2 0 0 1 5 3h4.09a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L10.09 10a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 24 17z"/>
+                </svg>
+                Contact
+            </a>
+
+            <!-- Account (mobile) -->
+            <div>
+                <div class="mob-link" onclick="toggleMobSub('mob-acc')">
+                    <div class="avatar w-6 h-6 text-xs">JD</div>
+                    Account
+                    <svg class="w-3.5 h-3.5 ml-auto transition-transform duration-200" id="mob-acc-caret" fill="none"
+                         stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                </div>
+                <div class="mob-sub" id="mob-acc">
+                    <div class="mob-sub-item">👤 Profile</div>
+                    <div class="mob-sub-item">🔒 Change Password</div>
+                    <div class="mob-sub-item" style="color:#ef4444">🚪 Logout</div>
+                </div>
+            </div>
+
+            <!-- Theme (mobile) -->
+            <div class="drop-divider my-2"></div>
+            <p class="text-xs font-semibold uppercase tracking-widest px-1 mb-1" style="color:var(--text-muted)">
+                Appearance</p>
+            <div class="flex gap-2 px-1 pb-3">
+                <button class="flex-1 py-2 rounded-lg text-sm font-medium border transition-all theme-opt"
+                        data-t="light" onclick="setTheme('light')"
+                        style="border-color:var(--nav-border);color:var(--text-primary)">☀️ Light
+                </button>
+                <button class="flex-1 py-2 rounded-lg text-sm font-medium border transition-all theme-opt" data-t="dark"
+                        onclick="setTheme('dark')" style="border-color:var(--nav-border);color:var(--text-primary)">🌙
+                    Dark
+                </button>
+                <button class="flex-1 py-2 rounded-lg text-sm font-medium border transition-all theme-opt"
+                        data-t="system" onclick="setTheme('system')"
+                        style="border-color:var(--nav-border);color:var(--text-primary)">💻 System
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT
+═════════════════════════════════════════════════════════════ -->
+<script>
+    /* ── Theme engine ───────────────────────────────────────── */
+    const htmlEl = document.documentElement;
+    const PREF_KEY = 'ripeready-theme';
+
+    function applyDark(isDark) {
+        if (isDark) {
+            htmlEl.classList.add('dark');
+        } else {
+            htmlEl.classList.remove('dark');
+        }
+    }
+
+    function setTheme(mode) {
+        localStorage.setItem(PREF_KEY, mode);
+        if (mode === 'system') {
+            applyDark(window.matchMedia('(prefers-color-scheme: dark)').matches);
+        } else {
+            applyDark(mode === 'dark');
+        }
+        updateThemeUI(mode);
+        closeAll();
+    }
+
+    function updateThemeUI(mode) {
+        // Highlight active option
+        document.querySelectorAll('.theme-opt').forEach(el => {
+            el.classList.toggle('active', el.dataset.t === mode);
+        });
+        // Update navbar icon
+        const icons = {
+            light: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>`,
+            dark: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
+            system: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>`
+        };
+        const ti = document.getElementById('themeIcon');
+        if (ti) ti.innerHTML = icons[mode] || icons.system;
+    }
+
+    // Init on load
+    (function init() {
+        const saved = localStorage.getItem(PREF_KEY) || 'system';
+        setTheme(saved);
+        // Listen for OS preference changes when mode = system
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if ((localStorage.getItem(PREF_KEY) || 'system') === 'system') {
+                applyDark(e.matches);
+            }
+        });
+    })();
+
+    /* ── Dropdown toggles ───────────────────────────────────── */
+    function toggleDrop(id) {
+        const el = document.getElementById(id);
+        const wasOpen = el.classList.contains('open');
+        closeAll();
+        if (!wasOpen) {
+            el.classList.add('open');
+            const caret = document.getElementById(id + '-caret');
+            if (caret) caret.style.transform = 'rotate(180deg)';
+        }
+    }
+
+    function closeAll() {
+        document.querySelectorAll('.dropdown.open').forEach(el => {
+            el.classList.remove('open');
+            const caret = document.getElementById(el.id + '-caret');
+            if (caret) caret.style.transform = '';
+        });
+    }
+
+    document.addEventListener('click', e => {
+        if (!e.target.closest('.dropdown')) closeAll();
+    });
+
+    /* ── Mobile menu ────────────────────────────────────────── */
+    function toggleMobile() {
+        const menu = document.getElementById('mobile-menu');
+        const ham = document.getElementById('hamburger');
+        menu.classList.toggle('open');
+        ham.classList.toggle('open');
+    }
+
+    function toggleMobSub(id) {
+        const sub = document.getElementById(id);
+        const caret = document.getElementById(id + '-caret');
+        const isOpen = sub.classList.contains('open');
+        // Close siblings
+        document.querySelectorAll('.mob-sub.open').forEach(s => s.classList.remove('open'));
+        document.querySelectorAll('[id$="-caret"]').forEach(c => c.style.transform = '');
+        if (!isOpen) {
+            sub.classList.add('open');
+            if (caret) caret.style.transform = 'rotate(180deg)';
+        }
+    }
+
+    /* ── Sticky / hide on scroll ────────────────────────────── */
+    let lastY = 0;
+    const navbar = document.getElementById('navbar');
+
+    window.addEventListener('scroll', () => {
+        const y = window.scrollY;
+        if (y > 20) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+
+        // Hide on scroll down, show on scroll up (only after 120px)
+        if (y > 120) {
+            if (y > lastY + 8) {
+                navbar.classList.add('hide');
+            } else if (y < lastY - 8) {
+                navbar.classList.remove('hide');
+            }
+        }
+        lastY = y;
+    }, {passive: true});
+
+    /* ── Login / Logout toggle demo ─────────────────────────── */
+    function toggleLogin(el) {
+        const txt = document.getElementById('loginText');
+        txt.textContent = txt.textContent === 'Logout' ? 'Login' : 'Logout';
+        el.style.color = txt.textContent === 'Logout' ? '#ef4444' : 'var(--accent)';
+        closeAll();
+    }
+</script>

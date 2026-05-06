@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Payment Success{% endblock title %}
+{% block content %}
+    <div class="container flex items-center justify-center mx-auto md:h-screen">
+        <div class="w-3xl border border-gray-300 p-12 rounded-lg shadow-md ">
+            <h2 class="text-center text-2xl text-green-700 font-semibold mb-3"><i class="fa-brands fa-cc-paypal"></i> Payment Success !</h2>
+            <hr>
+            <p class="text-center text-lg text-black">Your order was processed successfully..</p>
+            <div class="mx-auto text-center mt-6">
+                <button class="px-6 py-3 bg-blue-500 text-white rounded-xl"><a href="{% url 'store:store' %}">Back to
+                    Store</a></button>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

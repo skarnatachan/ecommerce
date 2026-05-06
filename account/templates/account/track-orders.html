@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Track Your Orders{% endblock title %}
+{% block content %}
+    <div class="container mx-auto md:max-w-4xl mt-16">
+        <div>
+            <h1 class="text-center text-3xl font-semibold mb-12">Track Your Orders</h1>
+            <div>
+
+
+                <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+                    <table class="w-full text-sm text-left rtl:text-right text-body">
+                        <thead class="text-lg font-semibold bg-gray-600 text-white border-b rounded-base border-default">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 font-medium">
+                                Order Date
+                            </th>
+                            <th scope="col" class="px-6 py-3 font-medium">
+                                Product
+                            </th>
+                            <th scope="col" class="px-6 py-3 font-medium">
+                                Quantity
+                            </th>
+                            <th scope="col" class="px-6 py-3 font-medium">
+                                Price ($)
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in orders %}
+                            <tr class="bg-neutral-primary border-b border-default">
+                                <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                                    {{ item.orderitem2order.order_date|date }}
+                                </th>
+                                <td class="px-6 py-4">
+                                    {{ item.orderitem2product.name }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ item.quantity }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ item.price }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock content %}

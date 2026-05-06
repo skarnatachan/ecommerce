@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Dashboard{% endblock title %}
+{% block content %}
+    <div class="container md:h-screen flex flex-col items-center justify-center mx-auto gap-12">
+        <div class="text-center bg-gray-600 text-white p-12 rounded-lg w-2xl">
+            <h1 class="text-3xl font-semibold">Welcome, {{ user|capfirst }}</h1>
+            <hr class="my-4">
+            <p class="text-base">This is your dashboard where you can perform any of the following:</p>
+            <ul class="list-disc list-inside text-left">
+                <li>Track your orders</li>
+                <li>Manage your account</li>
+                <li>Shipping Management</li>
+            </ul>
+        </div>
+        <div class="text-center bg-gray-600 text-white p-12 rounded-lg w-2xl">
+            <h1 class="text-3xl font-semibold">Track Your Orders</h1>
+            <hr class="my-4">
+            <p class="mb-3">Check your order status</p>
+            <div class="flex flex-col justify-center gap-4">
+                <a class="py-4 px-6 bg-green-700 text-white text-lg font-semibold rounded-xl"
+                   href="{% url 'account:track_orders' %}">My orders</a>
+            </div>
+        </div>
+        <div class="text-center bg-gray-600 text-white p-12 rounded-lg w-2xl">
+            <h1 class="text-3xl font-semibold">Manage your account</h1>
+            <hr class="my-4">
+            <p class="mb-3">Update or Delete your account</p>
+            <div class="flex flex-col justify-center gap-4">
+                <a class="py-4 px-6 bg-green-700 text-white text-lg font-semibold rounded-xl"
+                   href="{% url 'account:profile-management' %}">Profile
+                    Management</a>
+            </div>
+        </div>
+        <div class="text-center bg-gray-600 text-white p-12 rounded-lg w-2xl">
+            <h1 class="text-3xl font-semibold">Shipping Management</h1>
+            <hr class="my-4">
+            <p class="mb-3">Complete your shipping address</p>
+            <div class="flex flex-col justify-center gap-4">
+                <a class="py-4 px-6 bg-green-700 text-white text-lg font-semibold rounded-xl"
+                   href="{% url 'account:manage-shipping' %}">Manage shipping</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

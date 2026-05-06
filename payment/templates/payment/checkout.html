@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Shipping{% endblock title %}
+{% block content %}
+    <section class="bg-gray-50 dark:bg-gray-900">
+        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+            <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md md:max-w-xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                        Confirm Your Shipping Address &nbsp; &nbsp; <i class="fa-solid fa-plane-departure"></i>
+                    </h1>
+                    <div class="text-lg text-slate-700 space-y-2">
+                        <p>Full Name : <strong>{{ shipping_address.full_name }}</strong></p>
+                        <p>Email : <strong>{{ shipping_address.email }}</strong></p>
+                        <p>Address1 : <strong>{{ shipping_address.address1 }}</strong></p>
+                        <p>Address2 : <strong>{{ shipping_address.address2 }}</strong></p>
+                        <p>City : <strong>{{ shipping_address.city }}</strong></p>
+                        <p>State : <strong>{{ shipping_address.state }}</strong></p>
+                        <p>Zip Code : <strong>{{ shipping_address.zip_code }}</strong></p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between p-6 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    {#                    <a href="{% url 'payment:complete-order' %}" class="px-6 py-4 bg-green-700 text-white rounded-lg">Complete#}
+                    {#                        Order</a>#}
+                    <a href="{% url 'account:manage-shipping' %}"
+                       class=" w-full px-6 py-4 bg-black text-white rounded-lg text-center text-lg font-semibold">Update
+                        Shipping Address</a>
+                </div>
+
+                <!-- PayPal Section -->
+
+                <!-- PayPal button container -->
+                <div id="paypal-button-container"></div>
+
+
+                <!-- PayPal client ID integration -->
+
+                <script src="https://www.paypal.com/sdk/js?client-id=AbIZjVShvy8pJIXx9F-s5CzTiAuAYQmuvNtLEbV33wVADVtTevNI1sGZ5tz5QyG_Pd-F0GwoRqRf_hX2&currency=USD&intent=capture&enable-funding=venmo"
+                        data-sdk-integration-source="integrationbuilder"></script>
+
+            </div>
+        </div>
+    </section>
+    <!-- PayPal JS SDK -->
+
+    <script>
+
+        const total_price = {{cart.get_total}};
+
+        const paypalButtonsComponent = paypal.Buttons({
+            // optional styling for buttons
+            // https://developer.paypal.com/docs/checkout/standard/customize/buttons-style-guide/
+            style: {
+                color: "gold",
+                shape: "rect",
+                layout: "vertical"
+            },
+
+            // set up the transaction
+            createOrder: (data, actions) => {
+                // pass in any options from the v2 orders create call:
+                // https://developer.paypal.com/api/orders/v2/#orders-create-request-body
+                const createOrderPayload = {
+                    purchase_units: [
+                        {
+                            amount: {
+                                value: total_price
+                            }
+                        }
+                    ]
+                };
+
+                return actions.order.create(createOrderPayload);
+            },
+
+            // finalize the transaction
+            onApprove: (data, actions) => {
+                const captureOrderHandler = (details) => {
+                    const payerName = details.payer.name.given_name;
+                    console.log('Transaction completed');
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'payment:complete-order' %}",
+                        data: {
+                            csrfmiddlewaretoken: "{{ csrf_token }}",
+                        },
+                        success: function (response) {
+                            window.location.href = response.redirect;
+                        },
+                        error: function (xhr) {
+                            console.error('Order completion failed:', xhr.status, xhr.responseText);
+                        }
+                    })
+
+                };
+
+                return actions.order.capture().then(captureOrderHandler);
+            },
+
+            // handle unrecoverable errors
+            onError: (err) => {
+                console.error('An error prevented the buyer from checking out with PayPal');
+
+
+            }
+        });
+
+        paypalButtonsComponent
+            .render("#paypal-button-container")
+            .catch((err) => {
+                console.error('PayPal Buttons failed to render');
+            });
+
+    </script>
+
+{% endblock content %}
